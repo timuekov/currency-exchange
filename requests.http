@@ -1,0 +1,4 @@
+POST http://localhost:8080/currency-exchange/currencies
+Content-Type: application/x-www-form-urlencoded
+
+name=Euro&code=EUR&sign=€
