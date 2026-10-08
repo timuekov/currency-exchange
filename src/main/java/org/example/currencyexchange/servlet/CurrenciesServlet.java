@@ -67,7 +67,6 @@ public class CurrenciesServlet extends HttpServlet {
             objectMapper.writeValue(resp.getWriter(), currency);
         } catch (SQLiteException e) {
             if (e.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE
-                    || e.getErrorCode() == 19
                     || (e.getMessage() != null && e.getMessage().contains("UNIQUE constraint failed"))) {
                 resp.setStatus(HttpServletResponse.SC_CONFLICT);
                 ErrorResponse errorResponse = new ErrorResponse("Валюта с таким кодом уже существует");

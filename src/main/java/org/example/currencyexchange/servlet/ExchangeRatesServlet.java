@@ -98,7 +98,9 @@ public class ExchangeRatesServlet extends HttpServlet {
             objectMapper.writeValue(resp.getWriter(), errorResponse);
 
         } catch (SQLiteException e) {
-            if (e.getResultCode().equals(SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE)) {
+            if (e.getResultCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE
+                    || (e.getMessage() != null
+                    && e.getMessage().contains("UNIQUE constraint failed"))) {
                 resp.setStatus(HttpServletResponse.SC_CONFLICT);
                 ErrorResponse errorResponse = new ErrorResponse("Такая валютная пара уже существует");
                 objectMapper.writeValue(resp.getWriter(), errorResponse);
