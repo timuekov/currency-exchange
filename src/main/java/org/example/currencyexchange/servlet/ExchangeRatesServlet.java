@@ -71,8 +71,16 @@ public class ExchangeRatesServlet extends HttpServlet {
         try {
             rateValue = new BigDecimal(rate);
 
+            if (rateValue.compareTo(BigDecimal.ZERO) <= 0) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                ErrorResponse errorResponse = new ErrorResponse("Курс должен быть больше нуля");
+                objectMapper.writeValue(resp.getWriter(), errorResponse);
+                return;
+            }
+
             Optional<Currency> baseCurrency = currencyDao.findByCode(baseCurrencyCode);
             Optional<Currency> targetCurrency = currencyDao.findByCode(targetCurrencyCode);
+
 
             if (baseCurrency.isEmpty() || targetCurrency.isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
