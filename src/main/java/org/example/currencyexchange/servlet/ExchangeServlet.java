@@ -76,6 +76,9 @@ public class ExchangeServlet extends HttpServlet {
             return;
         }
 
+        from = from.toUpperCase();
+        to = to.toUpperCase();
+
         ExchangeResponse exchangeResponse;
 
         try {

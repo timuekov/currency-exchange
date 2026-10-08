@@ -33,7 +33,7 @@ public class CurrencyServlet extends HttpServlet {
 
         }
 
-        String currencyCode = pathInfo.replaceFirst("/", "").trim();
+        String currencyCode = pathInfo.replaceFirst("/", "").trim().toUpperCase();
 
         if (currencyCode.length() != 3) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 400
