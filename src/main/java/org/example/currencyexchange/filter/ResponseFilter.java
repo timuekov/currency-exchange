@@ -11,7 +11,13 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebFilter("/*")
+@WebFilter(urlPatterns = {
+        "/currencies",
+        "/currency/*",
+        "/exchangeRates",
+        "/exchangeRate/*",
+        "/exchange"
+})
 public class ResponseFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -20,7 +26,7 @@ public class ResponseFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-        // 1. Указываем формат JSON и кодировку UTF-8 для всех ответов
+        // 1. Указываем формат JSON и кодировку UTF-8 для ответов
         httpResponse.setContentType("application/json");
         httpResponse.setCharacterEncoding("UTF-8");
 
