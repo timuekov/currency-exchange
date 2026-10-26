@@ -79,6 +79,13 @@ public class ExchangeServlet extends HttpServlet {
         from = from.toUpperCase();
         to = to.toUpperCase();
 
+        if (from.equals(to)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse("Исходная и целевая валюты должны отличаться");
+            objectMapper.writeValue(resp.getWriter(), errorResponse);
+            return;
+        }
+
         ExchangeResponse exchangeResponse;
 
         try {
