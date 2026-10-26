@@ -93,6 +93,13 @@ public class ExchangeRateServlet extends HttpServlet {
         String baseCurrencyCode = pair.substring(0, 3);
         String targetCurrencyCode = pair.substring(3, 6);
 
+        if (baseCurrencyCode.equals(targetCurrencyCode)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse("Базовая и целевая валюты должны отличаться");
+            objectMapper.writeValue(resp.getWriter(), errorResponse);
+            return;
+        }
+
         String body = req.getReader().readLine();
 
 
