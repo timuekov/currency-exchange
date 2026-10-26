@@ -60,6 +60,13 @@ public class CurrenciesServlet extends HttpServlet {
             return;
         }
 
+        if (!code.matches("[A-Z]{3}")) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse("Код валюты должен состоять из 3 заглавных латинских букв!");
+            objectMapper.writeValue(resp.getWriter(), errorResponse);
+            return;
+        }
+
         Currency currency = new Currency(code, name, sign);
         try {
             currencyDao.save(currency);
