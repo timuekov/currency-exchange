@@ -56,12 +56,18 @@ public class ExchangeRatesServlet extends HttpServlet {
             ErrorResponse errorResponse = new ErrorResponse("Отсутствует обязательное поле!");
             objectMapper.writeValue(resp.getWriter(), errorResponse);
             return;
-
         }
 
         if (baseCurrencyCode.isEmpty() || targetCurrencyCode.isEmpty() || rate.isEmpty()) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             ErrorResponse errorResponse = new ErrorResponse("Обязательное поле не может быть пустым");
+            objectMapper.writeValue(resp.getWriter(), errorResponse);
+            return;
+        }
+
+        if (baseCurrencyCode.equals(targetCurrencyCode)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse("Базовая и целевая валюты должны отличаться");
             objectMapper.writeValue(resp.getWriter(), errorResponse);
             return;
         }
