@@ -33,15 +33,14 @@ public class CurrencyServlet extends HttpServlet {
 
         }
 
-        String currencyCode = pathInfo.replaceFirst("/", "").trim().toUpperCase();
+        String currencyCode = pathInfo.replaceFirst("/", "");
 
-        if (currencyCode.length() != 3) {
+        if (!currencyCode.matches("[A-Z]{3}")) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); // 400
-            ErrorResponse errorResponse = new ErrorResponse("Код валюты должен содержать 3 символа");
+            ErrorResponse errorResponse = new ErrorResponse("Код валюты должен содержать 3 латинских символа в верхнем регистре!");
             objectMapper.writeValue(resp.getWriter(), errorResponse);
             return;
         }
-
         try {
             Optional<Currency> currencyOptional = currencyDao.findByCode(currencyCode);
 
