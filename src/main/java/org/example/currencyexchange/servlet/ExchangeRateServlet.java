@@ -39,15 +39,22 @@ public class ExchangeRateServlet extends HttpServlet {
 
         String pair = pathInfo.substring(1);
 
-
-        if (pair.length() != 6) {
+        if (!pair.matches("[A-Z]{6}")) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ErrorResponse errorResponse = new ErrorResponse("Код валютной пары должен содержать 6 символов!");
+            ErrorResponse errorResponse = new ErrorResponse("Код валютной пары должен содержать 6 латинских символов в верхнем регистре!");
             objectMapper.writeValue(resp.getWriter(), errorResponse);
             return;
         }
+
         String baseCurrencyCode = pair.substring(0, 3);
         String targetCurrencyCode = pair.substring(3, 6);
+
+        if (baseCurrencyCode.equals(targetCurrencyCode)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse("Базовая и целевая валюты должны отличаться");
+            objectMapper.writeValue(resp.getWriter(), errorResponse);
+            return;
+        }
 
         try {
             Optional<ExchangeRate> exchangeRate = exchangeRateDao.findByPair(baseCurrencyCode, targetCurrencyCode);
@@ -65,14 +72,11 @@ public class ExchangeRateServlet extends HttpServlet {
             objectMapper.writeValue(resp.getWriter(), errorResponse);
 
         }
-
-
     }
 
 
     protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo();
-
 
 
         if (pathInfo == null || pathInfo.equals("/")) {
@@ -101,7 +105,6 @@ public class ExchangeRateServlet extends HttpServlet {
         }
 
         String body = req.getReader().readLine();
-
 
         if (body == null || body.isEmpty()) {
 
