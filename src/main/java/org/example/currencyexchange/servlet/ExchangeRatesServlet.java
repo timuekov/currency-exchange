@@ -65,6 +65,13 @@ public class ExchangeRatesServlet extends HttpServlet {
             return;
         }
 
+        if (!baseCurrencyCode.matches("[A-Z]{3}") || !targetCurrencyCode.matches("[A-Z]{3}")) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ErrorResponse errorResponse = new ErrorResponse("Код валюты должен содержать 3 латинских символа в верхнем регистре!");
+            objectMapper.writeValue(resp.getWriter(), errorResponse);
+            return;
+        }
+
         if (baseCurrencyCode.equals(targetCurrencyCode)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             ErrorResponse errorResponse = new ErrorResponse("Базовая и целевая валюты должны отличаться");
