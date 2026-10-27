@@ -87,9 +87,9 @@ public class ExchangeRateServlet extends HttpServlet {
         }
         String pair = pathInfo.substring(1);
 
-        if (pair.length() != 6) {
+        if (!pair.matches("[A-Z]{6}")) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ErrorResponse errorResponse = new ErrorResponse("Код валютной пары должен содержать 6 символов!");
+            ErrorResponse errorResponse = new ErrorResponse("Код валютной пары должен содержать 6 латинских символов в верхнем регистре!");
             objectMapper.writeValue(resp.getWriter(), errorResponse);
             return;
         }
