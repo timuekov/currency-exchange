@@ -27,10 +27,8 @@ public class ExchangeServlet extends HttpServlet {
 
     private final ExchangeService exchangeService = new ExchangeService(currencyDao, exchangeRateDao);
 
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
 
         String from = req.getParameter("from");
         String to = req.getParameter("to");
@@ -51,7 +49,6 @@ public class ExchangeServlet extends HttpServlet {
 
         BigDecimal amountValue;
 
-
         try {
             amountValue = new BigDecimal(amount);
 
@@ -69,15 +66,12 @@ public class ExchangeServlet extends HttpServlet {
             return;
         }
 
-        if (from.length() != 3 || to.length() != 3) {
+        if (!from.matches("[A-Z]{3}") || !to.matches("[A-Z]{3}")) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ErrorResponse errorResponse = new ErrorResponse("Код валюты должен состоять из 3 символов");
+            ErrorResponse errorResponse = new ErrorResponse("Код валюты должен состоять из 3 заглавных латинских букв");
             objectMapper.writeValue(resp.getWriter(), errorResponse);
             return;
         }
-
-        from = from.toUpperCase();
-        to = to.toUpperCase();
 
         if (from.equals(to)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -106,13 +100,9 @@ public class ExchangeServlet extends HttpServlet {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             objectMapper.writeValue(resp.getWriter(), errorResponse);
             return;
-
-
         }
         resp.setStatus(HttpServletResponse.SC_OK);
         objectMapper.writeValue(resp.getWriter(), exchangeResponse);
         return;
-
-
     }
 }
